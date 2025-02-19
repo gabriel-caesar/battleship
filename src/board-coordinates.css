@@ -1,0 +1,223 @@
+/* ----------------- COORDINATE LABELS ----------------- */
+
+#p0-0-left::before,
+#p0-1-left::before,
+#p0-2-left::before,
+#p0-3-left::before,
+#p0-4-left::before,
+#p0-5-left::before,
+#p0-6-left::before,
+#p0-7-left::before,
+#p0-8-left::before,
+#p0-9-left::before,
+#p0-0-right::before,
+#p0-1-right::before,
+#p0-2-right::before,
+#p0-3-right::before,
+#p0-4-right::before,
+#p0-5-right::before,
+#p0-6-right::before,
+#p0-7-right::before,
+#p0-8-right::before,
+#p0-9-right::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--main-font-color);
+  font-size: 1.4rem;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 105%;
+}
+
+#p0-0-left::before {
+  content: '0';
+}
+
+#p0-1-left::before {
+  content: '1';
+}
+
+#p0-2-left::before {
+  content: '2';
+}
+
+#p0-3-left::before {
+  content: '3';
+}
+
+#p0-4-left::before {
+  content: '4';
+}
+
+#p0-5-left::before {
+  content: '5';
+}
+
+#p0-6-left::before {
+  content: '6';
+}
+
+#p0-7-left::before {
+  content: '7';
+}
+
+#p0-8-left::before {
+  content: '8';
+}
+
+#p0-9-left::before {
+  content: '9';
+}
+
+#p0-0-right::before {
+  content: '0';
+}
+
+#p0-1-right::before {
+  content: '1';
+}
+
+#p0-2-right::before {
+  content: '2';
+}
+
+#p0-3-right::before {
+  content: '3';
+}
+
+#p0-4-right::before {
+  content: '4';
+}
+
+#p0-5-right::before {
+  content: '5';
+}
+
+#p0-6-right::before {
+  content: '6';
+}
+
+#p0-7-right::before {
+  content: '7';
+}
+
+#p0-8-right::before {
+  content: '8';
+}
+
+#p0-9-right::before {
+  content: '9';
+}
+
+#p0-0-left::after,
+#p1-0-left::before,
+#p2-0-left::before,
+#p3-0-left::before,
+#p4-0-left::before,
+#p5-0-left::before,
+#p6-0-left::before,
+#p7-0-left::before,
+#p8-0-left::before,
+#p9-0-left::before,
+#p0-0-right::after,
+#p1-0-right::before,
+#p2-0-right::before,
+#p3-0-right::before,
+#p4-0-right::before,
+#p5-0-right::before,
+#p6-0-right::before,
+#p7-0-right::before,
+#p8-0-right::before,
+#p9-0-right::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--main-font-color);
+  font-size: 1.4rem;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  bottom: 105%;
+}
+
+#p0-0-left::after {
+  content: 'A';
+}
+
+#p1-0-left::before {
+  content: 'B';
+}
+
+#p2-0-left::before {
+  content: 'C';
+}
+
+#p3-0-left::before {
+  content: 'D';
+}
+
+#p4-0-left::before {
+  content: 'E';
+}
+
+#p5-0-left::before {
+  content: 'F';
+}
+
+#p6-0-left::before {
+  content: 'G';
+}
+
+#p7-0-left::before {
+  content: 'H';
+}
+
+#p8-0-left::before {
+  content: 'I';
+}
+
+#p9-0-left::before {
+  content: 'J';
+}
+
+#p0-0-right::after {
+  content: 'A';
+}
+
+#p1-0-right::before {
+  content: 'B';
+}
+
+#p2-0-right::before {
+  content: 'C';
+}
+
+#p3-0-right::before {
+  content: 'D';
+}
+
+#p4-0-right::before {
+  content: 'E';
+}
+
+#p5-0-right::before {
+  content: 'F';
+}
+
+#p6-0-right::before {
+  content: 'G';
+}
+
+#p7-0-right::before {
+  content: 'H';
+}
+
+#p8-0-right::before {
+  content: 'I';
+}
+
+#p9-0-right::before {
+  content: 'J';
+}
