@@ -3,7 +3,7 @@ import { Player, Computer } from '../src/Player';
 import { Gameboard } from '../src/gameboard';
 import './styles.css';
 import './board-coordinates.css';
-import { randomizePositions } from './positionLogic';
+import { randomizePositions, zeroTo } from './positionLogic';
 
 // getting the boards
 const leftBoard = document.querySelector('.left-board-container');
@@ -18,8 +18,15 @@ const playerOneName = document.getElementById('player-left');
 const playerTwoName = document.getElementById('player-right');
 const playerBot = document.getElementById('player-bot');
 
+// getting the pass-device dialog pop-up elements
+const passDialog = document.getElementById('pass-device-dialog');
+const passMessage = document.getElementById('pass-message');
+
 // getting the 'To Battle' button
 const toBattleButton = document.getElementById('toBattle-button');
+
+// getting the 'Randomize' button
+const randomizeButton = document.getElementById('randomize-btn');
 
 // function that disables a given name input
 const disableInput = (input, bool) => {
@@ -29,7 +36,7 @@ const disableInput = (input, bool) => {
   } else {
     input.disabled = false;
     input.style.backgroundColor = 'var(--main-font-color)'
-  }
+  };
 };
 
 // as bot game is the standard, disable the admiral 2 input 
@@ -95,7 +102,7 @@ const initializePlayer = (player, name, shipList) => {
   } else if (player === '2' && name === '') { // if user doesn't input a name
     thisPlayer = new Player('Admiral 2');
   } else { // opponent is a bot
-    thisPlayer = new Computer();
+    thisPlayer = new Computer('Bot');
   };
 
   thisPlayer.gameBoard = new Gameboard(10, 10);
@@ -127,6 +134,202 @@ const generateBoardGrid = (board, container) => {
   });
 };
 
+// function to handle rendering the squares in the board 
+const renderSquares = (board, player, bool) => {
+  for (let square of board) {
+    const ships = player.gameBoard.ships;
+    for (let i = 0; i < ships.length; i++) {
+      ships[i].position.map(pos => {
+        
+        if (square.dataset.x == pos[0] && square.dataset.y == pos[1]) {
+          if (bool) {
+            square.style.backgroundColor = 'var(--main-font-color)';
+            square.style.border = '2px solid var(--highlight-color)';
+          };
+        };
+
+      });
+    };
+  };
+};
+
+const highlightSunkShip = (player, side) => {
+  // highlight sunk ships
+  for (let coordinates of player.gameBoard.sunkShips) {
+    // const sunkShipSquare = document.getElementById(`p${c[i][0]}-${c[i][1]}-right`);
+    const sunkShipSquare = document.getElementById(`p${coordinates[0]}-${coordinates[1]}-${side}`);
+    sunkShipSquare.style.border = '3px solid var(--highlight-color)';
+    sunkShipSquare.innerHTML = '<i class="fa-solid fa-explosion"></i>';
+  };
+};
+
+const OnOffButton = (board, bool) => {
+  // disable or enable all buttons
+  for (let buttons of board.children) {
+    buttons.disabled = bool;
+  };
+};
+
+const checkWinner = (player, opponent) => {
+  // if all enemy ships are sunk
+  if (player.gameBoard.allShipsSunk()) {
+    // disabling all buttons from the given boards
+    OnOffButton(leftBoard, true);
+    OnOffButton(rightBoard, true);
+
+    // winning message
+    passMessage.textContent = `${opponent.name} won the Battle!`;
+    passDialog.showModal();
+
+    // update the game log (log that's in the middle of the upper nav-bar)
+    gameLog.innerHTML = `${opponent.name} <strong>Won!</strong>`;
+
+    // getting and assign a function to 'Continue' button
+    const continueButton = document.getElementById('continue-button');
+    continueButton.addEventListener('click', () => passDialog.close());
+  };
+};
+
+// style and disable the square button clicked
+const handleDomAttack = (square) => {
+  // style the shot square
+  square.innerHTML = '<i class="fa-solid fa-ship"></i>';
+  square.style.backgroundColor = 'var(--ship-hit-color)';
+  square.disabled = true; // disable square
+
+  // disable hover styles for the square
+  square.hover = square.style.opacity = '1';
+  square.hover = square.style.border = '1px solid var(--dark-font-color)';
+  square.hover = square.style.cursor = 'default';
+};
+
+// style and disable the square button clicked
+const handleDomMiss = (square) => {
+  // style the missed shot square
+  square.innerHTML = '<i class="fa-solid fa-water"></i>';
+  square.style.color = 'var(--highlight-color)';
+  square.disabled = true; // disable square
+
+  // disable hover styles for the square
+  square.hover = square.style.opacity = '1';
+  square.hover = square.style.border = '1px solid var(--dark-font-color)';
+  square.hover = square.style.cursor = 'default';
+};
+
+// function to handle attacks on the gameboard
+const attackSquares = (x, y, player, side) => {
+  // shooting the enemy board function
+  const thisSquare = document.getElementById(`p${x}-${y}-${side}`);
+
+  // calling receiveAttack to handle missed shots and successful shot
+  if (player.gameBoard.receiveAttack(x, y)) { // successful shot
+    handleDomAttack(thisSquare);
+    return true; // so the if you hit, you play again
+  } else {
+    handleDomMiss(thisSquare);
+    return false;
+  };
+};
+
+// map for 'Bot' to keep track of its shots
+const map = new Map();
+
+// bot attacks player
+const botAttack = (coordinate, player, bot) => {
+  // desabling all buttons from the given board
+  OnOffButton(rightBoard, true);
+  gameLog.innerHTML = `<strong>Bot game:</strong> Bot's turn`; // update the game log
+  const [x, y] = coordinate;
+  const thisSquare = document.getElementById(`p${x}-${y}-left`);
+  
+  // so the bot can be smarter when hitting ships
+  const surroundings = (x, y) => {
+    let array = [
+      [x, (y + 1)],
+      [x, (y - 1)],
+      [(x + 1), y],
+      [(x - 1), y]
+    ];
+
+    // getting the missed and successful shots
+    const hit = player.gameBoard.successfulShots;
+    const miss = player.gameBoard.missedShots;
+
+    // filtering only positive numbers and less than 10
+    console.log('before', array);
+    array = array.filter(c => c[0] >= 0 && c[1] >= 0);
+    array = array.filter(c => c[0] < 10 && c[1] < 10);
+
+    // filtering surroundings from already shot squares
+    array = array.filter(c => {
+      for (let i = 0; i < hit.length; i++) {
+        if (c[0] == hit[i][0] && c[1] == hit[i][1]) return false;
+      }
+      return true;
+    });
+    array = array.filter(c => {
+      for (let i = 0; i < miss.length; i++) {
+        if (c[0] == miss[i][0] && c[1] == miss[i][1]) return false;
+      }
+      return true;
+    });
+
+    // error, cant handle it here probably
+    // handle edge-case for when the surroundings are all shot
+    // actually change it for different surroundings of not sunk ships
+    if (array = []) return botAttack([zeroTo(10), zeroTo(10)], player, bot)
+
+    console.log('after', array);
+    return array;
+  };
+
+  if (map.has([x, y].toString())) { // if the coordinate was already shot
+    // edge case: when bot hit a ship and chose a surrounding square already shot
+    // if (bot.gameBoard.successfulShots.find(c => c[0] == x && c[1] == y)) {
+    //   console.log('going back to successful shot:', [x, y]);
+    //   return botAttack([x, y], player, bot);
+    // };
+    return botAttack([zeroTo(10), zeroTo(10)], player, bot);
+  };
+
+  // bot's reasoning time
+  setTimeout(() => {
+    OnOffButton(rightBoard, false); // disable all buttons from user while bot's reasoning
+    if (!player.gameBoard.receiveAttack(x, y)) { // missed shot
+      handleDomMiss(thisSquare); // handle rendering
+      map.set([x, y].toString()); // update map
+      gameLog.innerHTML = `<strong>Bot game:</strong> ${player.name}'s turn`; // update the game log
+      return;
+    } else {
+  
+      const shotShip = player.gameBoard.findByCoordinate(x, y); // find shot ship
+      if (shotShip.isSunk()) { // if ship sunk after shot
+        handleDomAttack(thisSquare); // handle rendering
+        highlightSunkShip(player, 'left'); // highlight the entire sunk ship
+        map.set([x, y].toString()); // update map
+        gameLog.innerHTML = `<strong>Bot game:</strong> ${player.name}'s turn`; // update the game log
+        if (checkWinner(player, bot)) { // auto-explanatory
+          return;
+        } else return botAttack([zeroTo(10), zeroTo(10)], player, bot);
+      };
+
+      // hit.find(c => {
+      //   const thisShip = bot.gameBoard.findByCoordinate(c[0], c[1]);
+      //   if (thisShip.sunk === false) {
+      //     return botAttack(surroundings(c[0], c[1])[zeroTo(3)], player, bot);
+      //   }
+      // });
+
+      handleDomAttack(thisSquare); // handle rendering
+      gameLog.innerHTML = `<strong>Bot game:</strong> ${player.name}'s turn`; // update the game log
+      map.set([x, y].toString()); // update map
+      console.log('bot attacked a ship');
+      // filtering only positive numbers and less than 10
+      return botAttack(surroundings(x, y)[zeroTo(surroundings.length)], player, bot);
+    };   
+  }, 500);
+};
+
 // for sake of readability, this function is a short for if the game is against your friend or a bot
 const isFriendGame = () => { return !playerBot.checked ? true : false };
 
@@ -137,10 +340,6 @@ const letTheGamesBegin = () => {
   const playerOne = initializePlayer('1', playerOneName.value, SHIPS_LIST);
   const playerTwo = initializePlayer('2', playerTwoName.value, SHIPS_LIST_TWO);
   const computer = initializePlayer('3', '', SHIPS_LIST_TWO);
-
-  // getting the pass-device dialog pop-up elements
-  const passDialog = document.getElementById('pass-device-dialog');
-  const passMessage = document.getElementById('pass-message');
 
   // getting the 'Pass' and 'Ready' button
   const passButton = document.getElementById('pass-button');
@@ -230,90 +429,40 @@ const letTheGamesBegin = () => {
 
   // ---------------------------------------- BOT GAME ----------------------------------------
 
-  if (!isFriendGame()) { // playing against a bot
+  if (!isFriendGame()) { // playing against a bo
+    // update the game log
+    gameLog.innerHTML = `<strong>Bot game:</strong> ${playerOne.name}'s turn`;
+
     generateBoardGrid(playerOne.gameBoard.board(), leftBoard);
     generateBoardGrid(computer.gameBoard.board(), rightBoard); // computer
-    
+
+    // displaying 'Randomize' button and assigning its function
+    randomizeButton.style.display = 'block';
+    randomizeButton.addEventListener('click', () => {
+      leftBoard.innerHTML = '';
+      playerOne.gameBoard.ships = randomizePositions(SHIPS_LIST);
+      generateBoardGrid(playerOne.gameBoard.board(), leftBoard);
+      return renderSquares(leftBoard.children, playerOne, true);
+    });
+
     // rendering the ships on the left board
-    const leftSquares = leftBoard.children;
-    for (let square of leftSquares) {
-      const ships = playerOne.gameBoard.ships;
-      for (let i = 0; i < ships.length; i++) {
-        ships[i].position.map(pos => {
-          
-          if (square.dataset.x === pos[0].toString() && square.dataset.y === pos[1].toString()) {
-            square.style.backgroundColor = 'var(--main-font-color)';
-            square.style.border = '2px solid var(--highlight-color)';
-          };
+    renderSquares(leftBoard.children, playerOne, true);
+    
+    // rendering the ships on the right board
+    renderSquares(rightBoard.children, playerTwo, true);
 
-        });
-      };
-    };
-
-    // 'rightBoard.children' returns an object, so I iterate through it with a for...of loop to get all the buttons
-    const rightSquares = rightBoard.children;
-    for (let square of rightSquares) {
-      const ships = computer.gameBoard.ships;
-
-      // shooting the enemy board function
+    // assigning the attack function to the bot's board
+    for (let square of rightBoard.children) {
       square.addEventListener('click', () => {
-        const thisSquare = document.getElementById(`p${square.dataset.x}-${square.dataset.y}-right`);
-        // calling receiveAttack to handle missed shots and successful shot
-        
-        if (computer.gameBoard.receiveAttack(square.dataset.x, square.dataset.y)) { // successful shot
-          // style the shot square
-          thisSquare.innerHTML = '<i class="fa-solid fa-ship"></i>';
-          thisSquare.style.backgroundColor = 'var(--ship-hit-color)';
-          thisSquare.disabled = true; // disable square
-
-          // disable hover styles for the square
-          thisSquare.hover = thisSquare.style.opacity = '1';
-          thisSquare.hover = thisSquare.style.border = '1px solid var(--dark-font-color)';
-          thisSquare.hover = thisSquare.style.cursor = 'default';
-        } else {
-          // style the missed shot square
-          thisSquare.innerHTML = '<i class="fa-solid fa-water"></i>';
-          thisSquare.disabled = true; // disable square
-
-          // disable hover styles for the square
-          thisSquare.hover = thisSquare.style.opacity = '1';
-          thisSquare.hover = thisSquare.style.border = '1px solid var(--dark-font-color)';
-          thisSquare.hover = thisSquare.style.cursor = 'default';
-        };
-
-        // if all enemy ships are sunk
-        if (computer.gameBoard.allShipsSunk()) {
-          // 'rightBoard.children' returns an object, so I iterate through it with a for...of loop to get all the buttons
-          // disable all buttons
-          for (let buttons of rightBoard.children) {
-            buttons.disabled = true;
-          };
-
-          // winning message
-          passMessage.textContent = `${playerOne.name} won the Battle!`;
-          passDialog.showModal();
-
-          // update the game log (log that's in the middle of the upper nav-bar)
-          gameLog.innerHTML = `${playerOne.name} <strong>Won!</strong>`;
-
-          // getting and assign a function to 'Continue' button
-          const continueButton = document.getElementById('continue-button');
-          continueButton.addEventListener('click', () => passDialog.close());
+        randomizeButton.style.display = 'none';
+        if (attackSquares(square.dataset.x, square.dataset.y, computer, 'right')) {
+          highlightSunkShip(computer, 'right');
+          checkWinner(computer, playerOne);
+        } else {    
+          return botAttack([zeroTo(10), zeroTo(10)], playerOne, computer);
         };
       });
-      
-      // rendering the enemy ships on the right board
-      for (let i = 0; i < ships.length; i++) {
-        ships[i].position.map(pos => {
-          if (square.dataset.x === pos[0].toString() && square.dataset.y === pos[1].toString()) {
-            square.style.backgroundColor = 'var(--theme-color)';
-          };
-        });
-      };
     };
-
-    // update the game log (log that's in the middle of the upper nav-bar)
-    gameLog.innerHTML = `<strong>Bot game:</strong> ${playerOne.name}'s turn`;
   };
 };
 

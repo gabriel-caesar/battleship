@@ -12,6 +12,7 @@
   --evenLighter-theme-color: #435ca6;
   --highlight-color: #ce6922;
   --ship-hit-color: #743202;
+  --sunk-ship-color: #c50000;
 }
 
 body {
@@ -185,7 +186,8 @@ body {
 #no-quit:hover,
 #continue-button:hover,
 #pass-button:hover,
-#ready-button:hover {
+#ready-button:hover,
+.dialog-buttons:hover {
   opacity: 0.8;
   cursor: pointer;
 }
@@ -197,7 +199,8 @@ body {
 #no-quit:active,
 #continue-button:active,
 #pass-button:active,
-#ready-button:active {
+#ready-button:active,
+.dialog-buttons:active {
   opacity: 0.5;
   transition: none;
 }
@@ -212,6 +215,7 @@ body {
 
 main {
   margin-top: 50px;
+  position: relative;
 }
 
 .left-board-container,
@@ -252,6 +256,15 @@ main {
 .board-square:active {
   background-color: var(--ship-border-color);
   opacity: 0.1;
+}
+
+#randomize-btn {
+  top: 100%;
+  left: 14.5%;
+  position: absolute;
+  display: none;
+  margin-right: 46.5%;
+  margin-top: 2%;
 }
 
 /* ----------------- DIALOGs ----------------- */

@@ -34,8 +34,8 @@ const SHIPS_LIST = [
   new Ship(3, 'Destroyer'),
   new Ship(3, 'Destroyer'),
   new Ship(2, 'Submarine'),
+  new Ship(2, 'Submarine'),
   new Ship(2, 'Submarine')
-
 ];
 
 const SHIPS_LIST_TWO = [
@@ -46,8 +46,8 @@ const SHIPS_LIST_TWO = [
   new Ship(3, 'Destroyer'),
   new Ship(3, 'Destroyer'),
   new Ship(2, 'Submarine'),
+  new Ship(2, 'Submarine'),
   new Ship(2, 'Submarine')
-
 ];
 
 module.exports = { Ship, SHIPS_LIST, SHIPS_LIST_TWO };

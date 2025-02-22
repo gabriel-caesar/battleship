@@ -7,7 +7,8 @@ class Player {
 };
 
 class Computer {
-  constructor(gameBoard) {
+  constructor(name, gameBoard) {
+    this.name = name,
     this.gameBoard = gameBoard
   };
 };
