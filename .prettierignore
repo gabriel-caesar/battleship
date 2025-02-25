@@ -1,0 +1,7 @@
+# Ignore artifacts:
+*.css
+*.html
+*.config.js
+*.json
+/tests
+*.config.mjs
