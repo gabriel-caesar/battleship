@@ -8,11 +8,10 @@
   --theme-color: #17203b;
   --main-font-color: #cfcfcf;
   --dark-font-color: #747373;
-  --light-theme-color: #2b3c6d;
+  --light-theme-color: #2d3b65;
   --evenLighter-theme-color: #435ca6;
   --highlight-color: #ce6922;
   --ship-hit-color: #743202;
-  --sunk-ship-color: #c50000;
 }
 
 body {
@@ -182,11 +181,6 @@ body {
 .buttons:hover,
 .edit-btns:hover,
 .quit-button:hover,
-#yes-quit:hover,
-#no-quit:hover,
-#continue-button:hover,
-#pass-button:hover,
-#ready-button:hover,
 .dialog-buttons:hover {
   opacity: 0.8;
   cursor: pointer;
@@ -195,11 +189,6 @@ body {
 .buttons:active,
 .edit-btns:active,
 .quit-button:active,
-#yes-quit:active,
-#no-quit:active,
-#continue-button:active,
-#pass-button:active,
-#ready-button:active,
 .dialog-buttons:active {
   opacity: 0.5;
   transition: none;
@@ -249,8 +238,7 @@ main {
 
 .board-square:hover {
   cursor: pointer;
-  opacity: 0.8;
-  border: 3px solid var(--highlight-color);
+  opacity: 0.1;
 }
 
 .board-square:active {
@@ -267,9 +255,20 @@ main {
   margin-top: 2%;
 }
 
+#randomize-btn-two {
+  top: 100%;
+  left: 68.7%;
+  position: absolute;
+  display: none;
+  margin-right: 46.5%;
+  margin-top: 2%;
+}
+
 /* ----------------- DIALOGs ----------------- */
 #quit-dialog,
-#pass-device-dialog {
+#pass-device-dialog,
+#start-dialog,
+#ships-info-dialog {
   margin: auto;
   padding: 20px;
   border: none;
@@ -293,7 +292,10 @@ main {
 }
 
 #yes-quit,
-#continue-button {
+#continue-button,
+#start-button,
+#close-button,
+#winner-close-button {
   margin-right: 15px;
   background-color: var(--theme-color);
   color: var(--main-font-color);

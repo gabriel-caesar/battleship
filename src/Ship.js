@@ -21,7 +21,6 @@ class Ship {
 
   // checks if the ship have sunk
   isSunk() {
-    if (this.sunk) console.log(this.name, 'sunk!');
     return this.hitTimes === this.length ? this.sunk = true : this.sunk;
   };
 };

@@ -62,6 +62,36 @@ class Gameboard {
     };
   };
 
+  // so the bot can be smarter when hitting ships
+  surroundings = (x, y, hit, miss) => {
+    let array = [
+      [x, (y + 1)],
+      [x, (y - 1)],
+      [(x + 1), y],
+      [(x - 1), y]
+    ];
+
+    // filtering only positive numbers and less than 10
+    array = array.filter(c => c[0] >= 0 && c[1] >= 0);
+    array = array.filter(c => c[0] < 10 && c[1] < 10);
+
+    // filtering surroundings from already shot squares
+    array = array.filter(c => {
+      for (let i = 0; i < hit.length; i++) {
+        if (c[0] == hit[i][0] && c[1] == hit[i][1]) return false;
+      }
+      return true;
+    });
+    array = array.filter(c => {
+      for (let i = 0; i < miss.length; i++) {
+        if (c[0] == miss[i][0] && c[1] == miss[i][1]) return false;
+      }
+      return true;
+    });
+
+    return array;
+  };
+
   // checks if all ships are sunk
   allShipsSunk() {
     return this.sunkShips.length === 24 ? true : false;

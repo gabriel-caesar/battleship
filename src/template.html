@@ -54,6 +54,7 @@
   <div class="pass-btn-container">
     <button class="dialog-buttons displayNone" id="pass-button">Pass</button>
     <button class="dialog-buttons displayNone" id="ready-button">Ready!</button>
+    <button class="dialog-buttons displayNone" id="ships-info-button">Ships Info</button>
   </div>
 
   <!-- ------------------------ INFO LOG ------------------------ -->
@@ -75,15 +76,41 @@
     </div>
     
     <button class="dialog-buttons" id="randomize-btn">Randomize</button>
+    <button class="dialog-buttons" id="randomize-btn-two">Randomize</button>
   </main>
   
   <!-- ------------------------ PASS DEVICE TO OPPONENT DIALOG ------------------------ -->
    <dialog id="pass-device-dialog">
-    <p class="pRem" id="pass-message">Pass the device to your opponent</p>
+    <p class="pRem" id="pass-message"></p>
     <div class="button-wrapper">
       <button id="continue-button" class="dialog-buttons">Continue</button>
+      <button id="winner-close-button" class="dialog-buttons displayNone">Close</button>
     </div>
    </dialog>
+   
+
+   <!-- ------------------------ THE BATTLE WILL START DIALOG ------------------------ -->
+   <dialog id="start-dialog">
+    <p class="pRem" id="start-message"></p>
+    <div class="button-wrapper">
+      <button id="start-button" class="dialog-buttons">Start</button>
+    </div>
+   </dialog>
+
+   <!-- ------------------------ SHIPS INFO DIALOG ------------------------ -->
+   <dialog id="ships-info-dialog">
+    <p class="pRem" id="ships-info-message">
+      1 x 'Carrier' → 5 squares vertical<br>
+      1 x 'Battleship' → 4 squares vertical<br>
+      1 x 'Cruiser' → 3 squares vertical<br>
+      2 x 'Destroyers' → 3 squares horizontal<br>
+      3 x 'Submarines' → 2 squares horizontal<br>
+    </p>
+    <div class="button-wrapper">
+      <button id="close-button" class="dialog-buttons">Close</button>
+    </div>
+   </dialog>
+
 
   <!-- ------------------------ FOOTER CONTAINERS ------------------------ -->
   <footer class="flexAll">
