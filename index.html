@@ -1,11 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://kit.fontawesome.com/fc2f0cdae5.js" crossorigin="anonymous"></script>
+  <link rel="icon" type="image/png" sizes="96x96" href="55ebaae48f6c5b7e3815.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Battleship</title>
 <script defer src="main.js"></script></head>
-<body>
+<body class="flexAll column">
+
+  <!-- ------------------------ NAV BAR ------------------------ -->
+  <nav class="nav-bar">
+    <h2>Battleship</h2>
+    <span id="game-log" class="flexAll">
+      <p>Select a game mode</p>
+    </span>
+    <a href="https://github.com/gabriel-caesar" target='_blank' id="github-logo-a">
+      <img src="3524c849ab38de4be923.png" alt="git-hub-logo" id="github-logo">
+    </a>
+  </nav>
+
+  <!-- ------------------------ QUIT BUTTON DIALOG ------------------------ -->
+  <dialog id="quit-dialog">
+    <p class="pRem">Are you sure you want to quit?</p>
+    <div class="button-wrapper">
+      <button id="yes-quit" class="dialog-buttons">Yes</button>
+      <button id="no-quit" class="dialog-buttons">No</button>
+    </div>
+  </dialog>
+
+  <!-- ------------------------ PLAYER INPUTS  ------------------------ -->
+  <nav class="player-inputs flex">
+    <div class="player-left-container">
+      <div class="wrapper flex" id="admiralOne-wrapper">
+        <label for="player-left">Admiral 1</label>
+        <input type="text" id="player-left" class="inputs" placeholder="Player name...">
+      </div>
+    </div>
+
+    <div class="player-right-container flex">
+      <div class="wrapper flex" id="admiralTwo-wrapper">
+        <label for="player-right">Admiral 2</label>
+        <input type="text" id="player-right" class="inputs" placeholder="Player name...">
+      </div>
+      <div class="wrapper">
+        <label for="player-bot">Bot</label>
+        <input type="checkbox" id="player-bot" checked>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ------------------------ PASS BUTTON ------------------------ -->
+  <div class="pass-btn-container">
+    <button class="dialog-buttons displayNone" id="pass-button">Pass</button>
+    <button class="dialog-buttons displayNone" id="ready-button">Ready!</button>
+    <button class="dialog-buttons displayNone" id="ships-info-button">Ships Info</button>
+  </div>
+
+  <!-- ------------------------ INFO LOG ------------------------ -->
+  <div class="info-log flexAll column">
+    <button class="buttons" id="toBattle-button">To Battle</button>
+    <div class="info-card flexAll column">
+      <div><strong>Against Bot: </strong>toggle the <span>bot</span> checkbox</div>
+      <div><strong>Against a Friend: </strong>untoggle the <span>bot</span> checkbox</div>
+    </div>
+  </div>
+
+  <!-- ------------------------ BOARD CONTAINERS ------------------------ -->
+  <main class="flex">
+    <div class="left-board-container displayNone">
+      
+    </div>
+    <div class="right-board-container displayNone">
   
+    </div>
+    
+    <button class="dialog-buttons" id="randomize-btn">Randomize</button>
+    <button class="dialog-buttons" id="randomize-btn-two">Randomize</button>
+  </main>
+  
+  <!-- ------------------------ PASS DEVICE TO OPPONENT DIALOG ------------------------ -->
+   <dialog id="pass-device-dialog">
+    <p class="pRem" id="pass-message"></p>
+    <div class="button-wrapper">
+      <button id="continue-button" class="dialog-buttons">Continue</button>
+      <button id="winner-close-button" class="dialog-buttons displayNone">Close</button>
+    </div>
+   </dialog>
+   
+
+   <!-- ------------------------ THE BATTLE WILL START DIALOG ------------------------ -->
+   <dialog id="start-dialog">
+    <p class="pRem" id="start-message"></p>
+    <div class="button-wrapper">
+      <button id="start-button" class="dialog-buttons">Start</button>
+    </div>
+   </dialog>
+
+   <!-- ------------------------ SHIPS INFO DIALOG ------------------------ -->
+   <dialog id="ships-info-dialog">
+    <p class="pRem" id="ships-info-message">
+      1 x 'Carrier' → 5 squares vertical<br>
+      1 x 'Battleship' → 4 squares vertical<br>
+      1 x 'Cruiser' → 3 squares vertical<br>
+      2 x 'Destroyers' → 3 squares horizontal<br>
+      3 x 'Submarines' → 2 squares horizontal<br>
+    </p>
+    <div class="button-wrapper">
+      <button id="close-button" class="dialog-buttons">Close</button>
+    </div>
+   </dialog>
+
+
+  <!-- ------------------------ FOOTER CONTAINERS ------------------------ -->
+  <footer class="flexAll">
+    <h3 class="textAlign p14">
+      © 2025 Battleship. All rights reserved.<br>
+      Developed by <a href="https://github.com/gabriel-caesar" target="_blank">Gabriel Caesar</a>.
+    </h3>
+  </footer>
 </body>
 </html>
